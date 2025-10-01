@@ -7,12 +7,14 @@ class SkillCard extends StatelessWidget {
   final Skill? skill;
   final bool isLoading;
   final VoidCallback? onTap;
+  final double? width;
 
   const SkillCard({
     Key? key,
     this.skill,
     this.isLoading = false,
     this.onTap,
+    this.width,
   }) : super(key: key);
 
   @override
@@ -22,6 +24,7 @@ class SkillCard extends StatelessWidget {
     }
 
     final s = skill!;
+  final w = width ?? 150;
 
     return InkWell(
       onTap: onTap,
@@ -32,7 +35,7 @@ class SkillCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         child: Container(
-          width: 150,
+          width: w,
           padding: const EdgeInsets.all(12),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -72,11 +75,12 @@ class SkillCard extends StatelessWidget {
   }
 
   Widget _buildShimmerEffect() {
+    final w = width ?? 150;
     return Shimmer.fromColors(
       baseColor: Colors.grey[300]!,
       highlightColor: Colors.grey[100]!,
       child: Container(
-        width: 150,
+        width: w,
         padding: const EdgeInsets.all(12),
         child: Column(
           mainAxisSize: MainAxisSize.min,

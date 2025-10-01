@@ -19,47 +19,57 @@ class SkillsList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
+    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final maxW = constraints.maxWidth;
+        const leftPad = 16.0;
+        const gap = 12.0;
+        final itemsPerView = isLandscape ? 3 : 2;
+        double cardWidth = ((maxW - leftPad) - (itemsPerView - 1) * gap) / itemsPerView;
+        if (cardWidth < 130) cardWidth = 130; 
+        final listHeight = cardWidth + 60; 
+
+        return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionHeader(title: level),
         SizedBox(
-          height: 210,
+          height: listHeight,
           child: Builder(
             builder: (context) {
               if (isLoading || skills.isEmpty) {
-                return ListView.builder(
+                return ListView.separated(
                   scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  itemCount: 3, // Show 3 loading cards
-                  itemBuilder: (context, index) => const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 4),
-                    child: SkillCard(isLoading: true),
-                  ),
+                  physics: const ClampingScrollPhysics(),
+                  padding: const EdgeInsets.only(left: leftPad, right: leftPad),
+                  itemCount: 3,
+                  separatorBuilder: (_, __) => const SizedBox(width: gap),
+                  itemBuilder: (context, index) => SkillCard(isLoading: true, width: cardWidth),
                 );
               }
 
-              return ListView.builder(
+              return ListView.separated(
                 scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 12),
+                physics: const ClampingScrollPhysics(),
+                padding: const EdgeInsets.only(left: leftPad, right: leftPad),
                 itemCount: skills.length,
+                separatorBuilder: (_, __) => const SizedBox(width: gap),
                 itemBuilder: (context, index) {
                   final skill = skills[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: SkillCard(
-                      skill: skill,
-                      onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-                          ),
-                          builder: (_) => SkillDetailSheet(skill: skill),
-                        );
-                      },
-                    ),
+                  return SkillCard(
+                    skill: skill,
+                    width: cardWidth,
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                        ),
+                        builder: (_) => SkillDetailSheet(skill: skill),
+                      );
+                    },
                   );
                 },
               );
@@ -67,6 +77,8 @@ class SkillsList extends ConsumerWidget {
           ),
         ),
       ],
+    );
+      },
     );
   }
 }
