@@ -42,10 +42,6 @@ lib/
 ## Notes on Images
 - Images are sports-specific (Unsplash links with cropping parameters). If any image 404s due to external hosting changes, the card will show a fallback icon; update URLs in `skill_repository.dart`.
 
-## Screenshots / Demo
-- Use your emulator to record a quick demo: scroll each section and tap any card to open the details.
-
-## Customization
 - Tweak card sizing rules in `widgets/skills_list.dart` (variables `cardWidth` and `listHeight`).
 - Style headers in `widgets/section_header.dart`.
 - Extend the model with additional fields (e.g., tags, difficulty score) and surface them in the detail sheet.
